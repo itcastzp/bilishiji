@@ -74,7 +74,6 @@ public class GoodsController {
     }
 
     @GetMapping("/sync")
-
     public String sync() throws Exception {
         biliBiliPlugin.sync();
         return "Scheduling";

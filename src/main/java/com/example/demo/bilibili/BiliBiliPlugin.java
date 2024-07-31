@@ -23,6 +23,7 @@ import org.hsqldb.lib.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -63,7 +64,11 @@ public class BiliBiliPlugin {
     }
 
     @Async
+    @CacheEvict(value = "goodcache",allEntries = true)
     public void sync() throws Exception {
+        LocalDateTime now = LocalDateTime.now();
+        if(true)
+            return;
         if (!isSyncing.get()) {
             isSyncing.compareAndSet(false, true);
             StopWatch stopWatch = new StopWatch();
@@ -200,7 +205,8 @@ public class BiliBiliPlugin {
 
                 LatestSync entity = new LatestSync();
                 entity.setSyncNum(allsuccess);
-                entity.setLatestSync(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
+
+                entity.setLatestSync(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(now));
                 entity.setSyncElapsedTime(stopWatch.elapsedTime() + "ms");
                 syncDao.save(entity);
                 isSyncing.compareAndSet(true, false);
