@@ -34,7 +34,7 @@ public class LogInterceptor implements HandlerInterceptor {
             //获取全部请求名称
             String urlName = info.getName();
 //            logger.info(urlName + "directPaths:" + directPaths);
-            if (directPaths.stream().findFirst().get().contains(request.getRequestURI())) {
+            if (request.getRequestURI().contains(directPaths.stream().findFirst().get())) {
                 return true;
             }
 
