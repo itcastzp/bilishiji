@@ -10,7 +10,6 @@ import com.example.demo.bilibili.plugin.service.LatestSyncDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,9 +61,13 @@ public class GoodsController {
 
 
     @GetMapping("/findMinPrice")
-    public Root findMinPrice(@RequestParam(name = "name", required = false, defaultValue = "") String name, @RequestParam(name = "minPrice", defaultValue = "50", required = false) int minPrice, @RequestParam(name = "maxPrice", defaultValue = "100", required = false) int maxPrice, Pageable pageable) {
+    public Root findMinPrice(@RequestParam(name = "name", required = false, defaultValue = "") String name,
+                             @RequestParam(name = "minPrice", defaultValue = "50", required = false) int minPrice,
+                             @RequestParam(name = "maxPrice", defaultValue = "100", required = false) int maxPrice,
+                             @RequestParam(name = "discount", defaultValue = "50", required = false) int discount,
+                             Pageable pageable) {
         LatestSync latestSync = latestSyncDao.findLatestSync();
-        List<Long> allMinPriceId = daumDao.findAllMinPriceId(minPrice, maxPrice, name, latestSync.getLatestSync());
+        List<Long> allMinPriceId = daumDao.findAllMinPriceId(minPrice, maxPrice, name,discount, latestSync.getLatestSync());
         List<Daum> byC2cItemsIdIn = daumDao.findByC2cItemsIdInOrderByShowPrice(allMinPriceId, pageable);
         Root root = new Root();
         Data data = new Data();

@@ -63,12 +63,13 @@ public class BiliBiliPlugin {
         return blockingQueue;
     }
 
+
+
     @Async
     @CacheEvict(value = "goodcache",allEntries = true)
     public void sync() throws Exception {
         LocalDateTime now = LocalDateTime.now();
-        if(true)
-            return;
+
         if (!isSyncing.get()) {
             isSyncing.compareAndSet(false, true);
             StopWatch stopWatch = new StopWatch();
@@ -177,9 +178,9 @@ public class BiliBiliPlugin {
                     request.setEntity(new StringEntity(GSON.toJson(sec), ContentType.APPLICATION_JSON));
                     Root secondRoot = null;
                     try {
-                        CloseableHttpClient newClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).setDefaultCookieStore(store).build();
+//                        CloseableHttpClient newClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).setDefaultCookieStore(store).build();
 
-                        secondRoot = GSON.fromJson(EntityUtils.toString(newClient.execute(request, httpClientContext).getEntity()), Root.class);
+                        secondRoot = GSON.fromJson(EntityUtils.toString(closeableHttpClient.execute(request, httpClientContext).getEntity()), Root.class);
                     } catch (Exception e) {
                         System.out.println("触发接口限制:" + EntityUtils.toString(closeableHttpClient.execute(request, httpClientContext).getEntity(), StandardCharsets.UTF_8));
                         e.printStackTrace();
@@ -323,17 +324,8 @@ public class BiliBiliPlugin {
         }
     }
 
-    public static void main(String[] args) {
-        String cookie = "SESSDATA=057af4d4%2C1727164306%2C3167f%2A31CjAptDQ1WcgxZdsqDDardMclIjwpt-0KBuLSONOyqFm4Ch81EhmhQ_Ufac0JoahI_OASVkJrc3J6Ymg5Vm5pM0JoWXZmX2M4Z0xJeHFhYWlIRzJ3NGthZnRBSEpnLUVwUS1USWwyc09YczkzcUpZbjhqVl9zeXJ5dmUyUllZd09NMlcyUGVTdVd3IIEC; _uuid=5D426A8A-4577-66F3-9452-34E2D1BC41F538761infoc; buvid3=98EA12CB-9251-4FE2-99A2-E1A2DD28B30027548infoc; rpdid=|(u))~|RR~kY0J'u~uumYklll; _xid=DR%5CM69ArlWOcqqkIZgEdmcXOEhnIuhzehu1oXV9Km1N7A9aYrjw5ogp8TMAJOO885i4bWf3AkKd9XXhCoIgRVbgiy479mFfLu3v2n7BgZsNJMAyJqdjpnWLJtZoHN6x5; 9AD585D8A7CB034A=yizDkS3h-1712045043363-8ddabe6a20a191157320539; 1735D64331DF397E=1RmeF%5CzGpVhbTTmIMRi9hkXsn10ioZwFweYpRDmX2xZmkIKZdjDO3eTAaoTH2QjrU8434BdPGJeofSQ5giFyLSJynsYrLEy7k2TYWktXK7YkK2rA4gegNiEwlClEqhrA; b_nut=100; CURRENT_BLACKGAP=0; buvid4=2A102AE4-067E-2930-9307-EDD23753970608863-023082109-tzUqlq9E3xqp7ZyZuTLbtw%3D%3D; fingerprint=e2885d18ef7e4a5dfbfb38f84fa07565; buvid_fp_plain=undefined; CURRENT_QUALITY=80; bp_t_offset_283872216=930906330024116324; buvid_fp=e2885d18ef7e4a5dfbfb38f84fa07565; Hm_lvt_8d8d2f308d6e6dffaf586bd024670861=1715237043,1715333339,1715583221,1715754827; LIVE_BUVID=AUTO7117163593944770; PVID=4; CURRENT_FNVAL=4048";
-        StringTokenizer tokenizer = new StringTokenizer(cookie);
-        while (tokenizer.hasMoreTokens()) {
-            String trim = tokenizer.nextToken(";").trim();
-            System.out.println(trim);
-            StringTokenizer eq = new StringTokenizer(trim);
-            while (eq.hasMoreTokens()) {
-                System.out.println(eq.nextToken("=").trim());
-            }
-        }
+    public static void main(String[] args) throws Exception {
+        new BiliBiliPlugin().sync();
     }
 
 }
