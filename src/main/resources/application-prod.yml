@@ -3,6 +3,9 @@ spring:
     cache-names: goodcache
     caffeine:
       spec: initialCapacity=50,maximumSize=500,expireAfterWrite=1d
+    redis:
+      key-prefix: "spring:cache::"
+    type: caffeine
   application:
     name: demo
   datasource:
@@ -19,9 +22,15 @@ spring:
     hibernate:
       show-sql: true
     database: hsql
-
+  redis:
+    host: 121.36.231.91
+    password: BIP####1234
 logging:
+#  config: classpath:log4j2-spring.xml
   level:
+    root: INFO
+    org.springframework.web: trace
+    io.netty: DEBUG
     org:
       hibernate:
         SQL: DEBUG
@@ -30,4 +39,6 @@ logging:
             sql:
               BasicBinder: trace
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"
+#    dateformat: yyyy-MM-dd
+#    console: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+

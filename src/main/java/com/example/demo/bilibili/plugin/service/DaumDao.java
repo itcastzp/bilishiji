@@ -3,6 +3,7 @@ package com.example.demo.bilibili.plugin.service;
 import com.example.demo.bilibili.Daum;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -30,6 +31,8 @@ public interface DaumDao extends JpaRepository<Daum, String> {
 
 
     @Cacheable("goodcache")
+    @EntityGraph(attributePaths = {"detailDtoList"})
+//    https://www.baeldung.com/spring-data-jpa-named-entity-graphs
     List<Daum> findByC2cItemsIdInOrderByShowPrice(List<Long> ids, Pageable pageable);
 
 

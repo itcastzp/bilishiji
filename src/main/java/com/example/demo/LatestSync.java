@@ -1,10 +1,14 @@
 package com.example.demo;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Table(name = "GENERIC_LATEST_SYNC")
 @Entity
-public class LatestSync {
+public class LatestSync  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -49,5 +53,13 @@ public class LatestSync {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public static void main(String[] args) {
+        String[] a = {"1,2,3", "4,5,6"};
+        //['1', '2', '3', '4', '5', '6']//
+        System.out.println(Arrays.stream(a).flatMap(s -> Stream.of(s.split(","))).collect(Collectors.toList()));
+
+
     }
 }

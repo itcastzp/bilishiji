@@ -39,10 +39,10 @@ public class LogInterceptor implements HandlerInterceptor {
             }
 
         }
-        logger.info("出现非法请求" + request.getRequestURI()+"--------------");
-
+        logger.info("出现非法请求" + request.getRequestURI() + "--------------");
         request.getRequestDispatcher("/error").forward(request, response);
         return false;
+
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.example.demo.bilibili.Data;
 import com.example.demo.bilibili.Daum;
 import com.example.demo.bilibili.Root;
 import com.example.demo.bilibili.plugin.service.DaumDao;
+import com.example.demo.bilibili.plugin.service.GoodsService;
 import com.example.demo.bilibili.plugin.service.LatestSyncDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +22,10 @@ public class GoodsController {
 
 
     private final DaumDao daumDao;
+    @Autowired
+    private GoodsService goodsService;
 
-    public GoodsController(DaumDao daumDao,
-                           LatestSyncDao latestSyncDao) {
+    public GoodsController(DaumDao daumDao, LatestSyncDao latestSyncDao) {
         this.daumDao = daumDao;
         this.latestSyncDao = latestSyncDao;
     }
@@ -34,6 +36,12 @@ public class GoodsController {
 
     @GetMapping("/hello")
     public String hello() {
+        LatestSync latestSync = new LatestSync();
+        latestSync.setSyncNum(123);
+
+        goodsService.saveLatestSyncDao(latestSync);
+
+
         return "hello";
     }
 
@@ -61,13 +69,9 @@ public class GoodsController {
 
 
     @GetMapping("/findMinPrice")
-    public Root findMinPrice(@RequestParam(name = "name", required = false, defaultValue = "") String name,
-                             @RequestParam(name = "minPrice", defaultValue = "50", required = false) int minPrice,
-                             @RequestParam(name = "maxPrice", defaultValue = "100", required = false) int maxPrice,
-                             @RequestParam(name = "discount", defaultValue = "50", required = false) int discount,
-                             Pageable pageable) {
+    public Root findMinPrice(@RequestParam(name = "name", required = false, defaultValue = "") String name, @RequestParam(name = "minPrice", defaultValue = "50", required = false) int minPrice, @RequestParam(name = "maxPrice", defaultValue = "100", required = false) int maxPrice, @RequestParam(name = "discount", defaultValue = "50", required = false) int discount, Pageable pageable) {
         LatestSync latestSync = latestSyncDao.findLatestSync();
-        List<Long> allMinPriceId = daumDao.findAllMinPriceId(minPrice, maxPrice, name,discount, latestSync.getLatestSync());
+        List<Long> allMinPriceId = daumDao.findAllMinPriceId(minPrice, maxPrice, name, discount, latestSync.getLatestSync());
         List<Daum> byC2cItemsIdIn = daumDao.findByC2cItemsIdInOrderByShowPrice(allMinPriceId, pageable);
         Root root = new Root();
         Data data = new Data();

@@ -3,7 +3,9 @@ package com.example.demo.bilibili;
 
 import com.example.demo.LatestSync;
 import com.example.demo.bilibili.plugin.service.LatestSyncDao;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
@@ -38,10 +40,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Component
 @ConfigurationProperties
 public class BiliBiliPlugin {
+
+    private ReentrantLock reentrantLock = new ReentrantLock();
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
     public static final String DB_NAME = "ncc";
@@ -64,9 +70,8 @@ public class BiliBiliPlugin {
     }
 
 
-
     @Async
-    @CacheEvict(value = "goodcache",allEntries = true)
+    @CacheEvict(value = "goodcache", allEntries = true)
     public void sync() throws Exception {
         LocalDateTime now = LocalDateTime.now();
 
@@ -228,6 +233,15 @@ public class BiliBiliPlugin {
     private static JsonObject buildFirstRequestParam() {
         JsonObject jsonObje = new JsonObject();
         jsonObje.addProperty("nextId", (String) null);
+        JsonArray priceFilters = new JsonArray();
+        priceFilters.add("2000-3000");
+        priceFilters.add("3000-5000");
+        priceFilters.add("5000-10000");
+        priceFilters.add("10000-20000");
+        priceFilters.add("20000-0");
+
+//        jsonObje.add("discountFilters", priceFilters);
+        jsonObje.add("priceFilters",priceFilters);
 
 //        jsonObject.put("sortType", "TIME_DESC");
 //        jsonObject.put("discountFilters", Lists.newArrayList("30-50"));
@@ -238,6 +252,15 @@ public class BiliBiliPlugin {
     private static JsonObject buildRequestParam(String nextId) {
         JsonObject jsonObje = new JsonObject();
         jsonObje.addProperty("nextId", nextId);
+
+        JsonArray priceFilters = new JsonArray();
+        priceFilters.add("2000-3000");
+        priceFilters.add("3000-5000");
+        priceFilters.add("5000-10000");
+        priceFilters.add("10000-20000");
+        priceFilters.add("20000-0");
+//        jsonObje.add("discountFilters", priceFilters);
+        jsonObje.add("priceFilters",priceFilters);
 //        sec.put("sortType", "TIME_DESC");
 //        sec.put("priceFilters", Lists.newArrayList("5000-10000"));
         return jsonObje;
@@ -325,7 +348,7 @@ public class BiliBiliPlugin {
     }
 
     public static void main(String[] args) throws Exception {
-        new BiliBiliPlugin().sync();
+        System.out.println(buildFirstRequestParam());
     }
 
 }

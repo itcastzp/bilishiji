@@ -1,11 +1,17 @@
 package com.example.demo.bilibili;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "GENERIC")
 @Entity
-public class Daum {
+@Cacheable
+public class Daum implements Serializable {
     @Id
     private String id;
     private Long c2cItemsId;

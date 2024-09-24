@@ -15,7 +15,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +32,14 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private LatestSyncDao latestSyncDao;
+
+    @Override
+    public void saveLatestSyncDao(LatestSync latestSync) {
+        latestSyncDao.save(latestSync);
+        if (true) {
+            throw new RuntimeException("保存报错");
+        }
+    }
 
     @Override
     @CacheEvict(value = "goodcache",allEntries = true)
