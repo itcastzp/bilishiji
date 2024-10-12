@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class LogInterceptor implements HandlerInterceptor {
@@ -34,8 +35,11 @@ public class LogInterceptor implements HandlerInterceptor {
             //获取全部请求名称
             String urlName = info.getName();
 //            logger.info(urlName + "directPaths:" + directPaths);
-            if (request.getRequestURI().contains(directPaths.stream().findFirst().get())) {
-                return true;
+            Optional<String> first = directPaths.stream().findFirst();
+            if (first.isPresent()) {
+                if (request.getRequestURI().contains(first.get())) {
+                    return true;
+                }
             }
 
         }

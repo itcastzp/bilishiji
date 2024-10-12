@@ -1,9 +1,5 @@
 package com.example.demo.bilibili;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;

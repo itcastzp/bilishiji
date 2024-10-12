@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.bilibili.BiliBiliPlugin;
+import com.example.demo.bilibili.plugin.service.FigureCrawlerService;
 import com.example.demo.bilibili.plugin.service.GoodsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 @EnableScheduling
 @EnableAsync
@@ -27,6 +29,9 @@ public class TaskSyncConfig {
 
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+
+    private FigureCrawlerService figureCrawlerService;
 
     public static void main(String[] args) {
         System.out.println(Instant.now());
@@ -55,6 +60,21 @@ public class TaskSyncConfig {
             int i = goodsService.cleanExpiredGoods();
             logger.info("结束清除失效任务：-------------" + Instant.now());
             logger.info("本次清除无效数据：-------------" + i);
+            logger.info("本次清除失效任务耗时：--- " + stopWatch.elapsedTime() + "ms,----- " + stopWatch.elapsedTime() / 1000 + "s");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+//    @Scheduled(initialDelay = 10, timeUnit = TimeUnit.SECONDS,fixedDelay = Integer.MAX_VALUE)
+    public void crawler() {
+        try {
+            logger.info("开始获取图片任务：-------------" + Instant.now());
+            StopWatch stopWatch = new StopWatch();
+            figureCrawlerService.crawler();
+            logger.info("结束获取图片任务：-------------" + Instant.now());
+
             logger.info("本次清除失效任务耗时：--- " + stopWatch.elapsedTime() + "ms,----- " + stopWatch.elapsedTime() / 1000 + "s");
         } catch (Exception e) {
             throw new RuntimeException(e);
