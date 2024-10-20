@@ -17,6 +17,10 @@ spring:
   jpa:
     properties:
       hibernate:
+        generate_statistics: true
+        order_inserts: true
+        jdbc:
+          batch_size: 5
         format_sql: true
     database-platform: org.hibernate.dialect.HSQLDialect
     hibernate:
