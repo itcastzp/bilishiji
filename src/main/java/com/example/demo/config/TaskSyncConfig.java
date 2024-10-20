@@ -38,7 +38,7 @@ public class TaskSyncConfig {
         System.out.println(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
     }
 
-    @Scheduled(cron = "@hourly")
+//    @Scheduled(cron = "@hourly")
     public void syncTask() {
         try {
             logger.info("开始同步任务：-------------" + Instant.now());
@@ -67,7 +67,7 @@ public class TaskSyncConfig {
 
     }
 
-//    @Scheduled(initialDelay = 10, timeUnit = TimeUnit.SECONDS,fixedDelay = Integer.MAX_VALUE)
+    @Scheduled(initialDelay = 3, timeUnit = TimeUnit.SECONDS,fixedDelay = Integer.MAX_VALUE)
     public void crawler() {
         try {
             logger.info("开始获取图片任务：-------------" + Instant.now());
